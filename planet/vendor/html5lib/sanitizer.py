@@ -16,7 +16,7 @@ class HTMLSanitizerMixin(object):
         'h5', 'h6', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'keygen', 'kbd',
         'label', 'legend', 'li', 'm', 'map', 'menu', 'meter', 'multicol',
         'nav', 'nextid', 'object', 'ol', 'output', 'optgroup', 'option', 'p', 'param', 'pre',
-        'progress', 'q', 's', 'samp', 'section', 'select', 'small', 'sound',
+        'progress', 'q', 's', 'samp', 'script', 'section', 'select', 'small', 'sound',
         'source', 'spacer', 'span', 'strike', 'strong', 'sub', 'sup', 'table',
         'tbody', 'td', 'textarea', 'time', 'tfoot', 'th', 'thead', 'tr', 'tt',
         'u', 'ul', 'var', 'video']
