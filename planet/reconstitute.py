@@ -225,8 +225,9 @@ def source(xsource, source, bozo, format):
     if not source.has_key('logo') and source.has_key('image'):
         createTextElement(xsource, 'logo', source.image.get('href',None))
 
-    for tag in source.get('tags',[]):
-        category(xsource, tag)
+	# do NOT copy all the categories from the feed to each entry
+	#for tag in source.get('tags',[]):
+	#    category(xsource, tag)
 
     author(xsource, 'author', source.get('author_detail',{}))
     for contributor in source.get('contributors',[]):
