@@ -223,8 +223,8 @@ class FeedParserDict(UserDict):
               'url': ['href'],
               'modified': 'updated',
               'modified_parsed': 'updated_parsed',
-              'issued': 'published',
-              'issued_parsed': 'published_parsed',
+              'issued': ['published', 'pubdate'],
+              'issued_parsed': ['published_parsed', 'pubdate_parsed'],
               'copyright': 'rights',
               'copyright_detail': 'rights_detail',
               'tagline': 'subtitle',
@@ -1255,11 +1255,23 @@ class _FeedParserMixin:
     _end_dcterms_issued = _end_published
     _end_issued = _end_published
 
+    def _start_pubdate(self, attrsD):
+        self.push('pubdate', 1)
+    _start_dcterms_issued = _start_pubdate
+    _start_issued = _start_pubdate
+
+    def _end_pubdate(self):
+        value = self.pop('pubdate')
+        self._save('pubdate_parsed', _parse_date(value))
+        self._save('published_parsed', _parse_date(value))
+    _end_dcterms_issued = _end_pubdate
+    _end_issued = _end_pubdate
+
     def _start_updated(self, attrsD):
         self.push('updated', 1)
     _start_modified = _start_updated
     _start_dcterms_modified = _start_updated
-    _start_pubdate = _start_updated
+#    _start_pubdate = _start_updated
     _start_dc_date = _start_updated
 
     def _end_updated(self):
@@ -1268,7 +1280,7 @@ class _FeedParserMixin:
         self._save('updated_parsed', parsed_value)
     _end_modified = _end_updated
     _end_dcterms_modified = _end_updated
-    _end_pubdate = _end_updated
+#    _end_pubdate = _end_updated
     _end_dc_date = _end_updated
 
     def _start_created(self, attrsD):
@@ -2338,11 +2350,11 @@ class _HTMLSanitizer(_BaseHTMLProcessor):
       'aside', 'audio', 'b', 'big', 'blockquote', 'br', 'button', 'canvas',
       'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'command',
       'datagrid', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir',
-      'div', 'dl', 'dt', 'em', 'event-source', 'fieldset', 'figure', 'footer',
+      'div', 'dl', 'dt', 'em', 'embed', 'event-source', 'fieldset', 'figure', 'footer',
       'font', 'form', 'header', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i',
       'iframe', 'img', 'input', 'ins', 'keygen', 'kbd', 'label', 'legend', 'li', 'm', 'map',
-      'menu', 'meter', 'multicol', 'nav', 'nextid', 'ol', 'output', 'optgroup',
-      'option', 'p', 'pre', 'progress', 'q', 's', 'samp', 'section', 'select',
+      'menu', 'meter', 'multicol', 'nav', 'nextid', 'object', 'ol', 'output', 'optgroup',
+      'option', 'p', 'param', 'pre', 'progress', 'q', 's', 'samp', 'section', 'select',
       'small', 'sound', 'source', 'spacer', 'span', 'strike', 'strong', 'sub',
       'sup', 'table', 'tbody', 'td', 'textarea', 'time', 'tfoot', 'th', 'thead',
       'tr', 'tt', 'u', 'ul', 'var', 'video', 'noscript']
