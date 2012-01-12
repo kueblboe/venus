@@ -1,12 +1,12 @@
 """ Splice together a planet from a cache of feed entries """
-import glob, os, time, shutil
+import glob, os, time, shutil, re
 from xml.dom import minidom
 import planet, config, feedparser, reconstitute, shell
 from reconstitute import createTextElement, date
 from spider import filename
 from planet import idindex
 
-def splice():
+def splice(search_query=None):
     """ Splice together a planet from a cache of entries """
     import planet
     log = planet.logger
@@ -98,11 +98,15 @@ def splice():
 
         try:
             entry=minidom.parse(file)
+            entry.normalize()
+
+            # if search query is passed, check if entry contains search string
+            if search_query and not re.search(re.escape(search_query.decode('utf-8').lower()), entry.toxml().lower()):
+                continue
 
             # verify that this entry is currently subscribed to and that the
             # number of entries contributed by this feed does not exceed
             # config.new_feed_items
-            entry.normalize()
             sources = entry.getElementsByTagNameNS(atomNS, 'source')
             if sources:
                 ids = sources[0].getElementsByTagName('id')
@@ -124,7 +128,7 @@ def splice():
             items = items + 1
             if items >= max_items: break
         except:
-            log.error("Error parsing %s", file)
+            log.exception("Error parsing %s", file)
 
     if index: index.close()
 
